@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vendas de Gift Card</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #FFFFFF;
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .logo {
+            width: 60px;
+            height: auto;
+            margin-bottom: 10px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: #FFFFFF;
+            padding: 20px;
+        }
+        .card {
+            margin: 10px 0;
+            padding: 15px;
+            background-color: #F8F8F8;
+            display: flex;
+            align-items: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .card.selected {
+            border: 2px solid #FD5068;
+            transform: scale(1.05);
+        }
+        .highlight {
+            background-color: #FD5068;
+            color: #FFFFFF;
+            padding: 5px 10px;
+            border-radius: 20px;
+            margin-left: auto;
+        }
+        .discount {
+            background-color: #008000;
+            color: #FFFFFF;
+            padding: 5px 10px;
+            border-radius: 20px;
+            margin-left: auto;
+        }
+        .title {
+            font-size: 30px;
+            color: #333333;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 16px;
+            color: #666666;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .value {
+            flex-grow: 1;
+            font-size: 20px;
+            color: #333333;
+            margin-left: 10px;
+        }
+        .popup {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding-top: 32px;
+            padding-bottom: 8px;
+            background-color: #FFFFFF;
+            box-shadow: 0px -4px 8px rgba(0, 0, 0, 0.2);
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            transition: transform 0.3s ease-in-out;
+            transform: translateY(100%);
+            max-height: 50%;
+            overflow-y: auto;
+        }
+        .popup.active {
+            display: block;
+            transform: translateY(0);
+        }
+        .popup .close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .popup .summary {
+            font-size: 20px;
+            color: #616161;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .popup .total {
+            font-size: 40px;
+            color: #616161;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .popup .fee {
+            font-size: 16px;
+            padding: 8px;
+            color: #616161;
+            border-radius: 4px;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .popup .message {
+            font-size: 16px;
+            color: #616161;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .button {
+            max-width: 350px;
+            margin: 8px 0;
+            display: block;
+            margin: 0 auto;
+            width: 100%;
+            padding: 14px;
+            text-align: center;
+            font-size: 18px;
+            color: #FFFFFF;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .button:hover {
+            background-color: #45a049; /* Cor do botão ao passar o mouse */
+        }
+        .cancel-button:hover {
+            background-color: #FF0000;
+        }
+        .bottom-button {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: 0;
+            padding: 14px;
+            background-color: #FD5068;
+            color: #FFFFFF;
+            text-align: center;
+            font-size: 18px;
+            border: none;
+            border-radius: 50;
+            cursor: pointer;
+        }
+        .bottom-button:hover {
+            background-color: #FD5068; /* Cor do botão ao passar o mouse */
+        }
+        .bottom-button {
+            position: relative;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .cancel-button {
+            background-color: #FF0000;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .hidden {
+            display: none;
+        }
+        input[type="radio"] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://raw.githubusercontent.com/connectstore/tinderplus/main/logo.png" alt="Tinder Logo" class="logo">
+        <div class="title">Tinder Plus</div>
+        <div class="subtitle">Powered by Connect</div>
+        <div class="subtitle">Selecione a melhor assinatura para você</div>
+
+        <div class="card" onclick="selectCard('value20')">
+            <input type="radio" name="value" id="value20" value="22">
+            <label for="value20" class="value">1 mês</label>
+            <span class="highlight">Mais escolhido!</span>
+        </div>
+        <div class="card" onclick="selectCard('value40')">
+            <input type="radio" name="value" id="value40" value="86">
+            <label for="value40" class="value">6 meses</label>
+        </div>
+        <div class="card" onclick="selectCard('value50')">
+            <input type="radio" name="value" id="value50" value="129">
+            <label for="value50" class="value">12 meses</label>
+            <span class="discount">Economize na compra!</span>
+        </div>
+    </div>
+
+    <div class="popup" id="paymentPopup">
+        <div class="summary">Valor final do pedido</div>
+        <div class="total" id="orderTotal">R$ 20</div>
+        <div class="fee">Para processamento e emissão do cartão pré-pago incluímos uma taxa de R$ 5.</div>
+        <button href="#" class="button" id="payButton">REALIZAR PAGAMENTO</button>
+        <button class="button cancel-button" id="cancelButton">CANCELAR PEDIDO</button>
+    </div>
+
+    <button class="button bottom-button hidden" id="continueButton">CONTINUAR</button>
+
+     <script>
+    // Oculta o botão "Continuar" ao abrir a página.
+    document.getElementById('continueButton').classList.add('hidden');
+    
+    function selectCard(cardId) {
+        document.getElementById('paymentPopup').classList.remove('active');
+        // Mostra o botão "Continuar" ao selecionar a opção
+        document.getElementById('continueButton').classList.remove('hidden'); 
+        // Remove a classe 'selected' de todos os cards
+        var cards = document.querySelectorAll('.card');
+        cards.forEach(function(card) {
+            card.classList.remove('selected');
+        });
+
+        // Adiciona a classe 'selected' ao card clicado
+        var selectedCard = document.querySelector('input#' + cardId);
+        selectedCard.parentElement.classList.add('selected');
+        selectedCard.checked = true;
+    }
+
+    document.getElementById('continueButton').addEventListener('click', function() {
+        var selectedValue = document.querySelector('input[name="value"]:checked');
+        if (selectedValue) {
+            var value = selectedValue.value;
+            var total = parseInt(value) + 5;
+            document.getElementById('orderTotal').textContent = 'R$ ' + total;
+            document.getElementById('paymentPopup').classList.add('active');
+            document.getElementById('continueButton').classList.add('hidden'); // Oculta o botão "Continuar"
+        } else {
+            alert('Por favor, selecione um valor.');
+        }
+    });
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        document.getElementById('paymentPopup').classList.remove('active');
+        document.getElementById('continueButton').classList.remove('hidden'); // Mostra o botão "Continuar"
+    });
+
+    document.getElementById('payButton').addEventListener('click', function() {
+        var selectedValue = document.querySelector('input[name="value"]:checked').value;
+        var total = parseInt(selectedValue) + 5;
+        var message = "Quero concluir o meu pedido #TINDERPLUS" + selectedValue + "\n\nDetalhes do pedido\n1x R$ " + selectedValue + " (Tinder)\n1x R$ 5 (Taxa de processamento)";
+        var whatsappUrl = "https://api.whatsapp.com/send?phone=553398801838&text=" + encodeURIComponent(message);
+        window.location.href = whatsappUrl;
+    });
+</script>
+</body>
+</html>
